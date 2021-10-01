@@ -238,7 +238,7 @@ MonoBehaviour:
   START_X: 0
   START_Y: 0
   rows: 11
-  cols: 15
+  cols: 17
   mCellPrefab: {fileID: 655410671452507885, guid: 5cb6be9474f00f04a8b0a3b277583063, type: 3}
 --- !u!4 &578443065
 Transform:
