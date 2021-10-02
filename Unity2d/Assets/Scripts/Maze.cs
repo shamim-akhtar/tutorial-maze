@@ -5,42 +5,15 @@ namespace Procedural
 {
   public class Maze
   {
-    public enum Directions
-    {
-      UP,
-      RIGHT,
-      DOWN,
-      LEFT,
-      NONE,
-    };
-    public class Cell
-    {
-      public int x;
-      public int y;
-      public bool visited = false;
-      public bool[] flag = { true, true, true, true };
 
-      public delegate void DelegateSetDirFlag(int x, int y, Directions dir, bool f);
-      public DelegateSetDirFlag onSetDirFlag;
-
-      public Cell(int c, int r)
-      {
-        x = c;
-        y = r;
-      }
-
-      public void SetDirFlag(Directions dir, bool f)
-      {
-        flag[(int)dir] = f;
-        onSetDirFlag?.Invoke(x, y, dir, f);
-      }
-    }
-
+    // the number of rows and columns
     private int mRows;
     private int mCols;
 
+    // the 2d array of cells
     private Cell[,] mCells;
 
+    // constructor
     public Maze(int rows, int cols)
     {
       mRows = rows;
@@ -124,10 +97,16 @@ namespace Procedural
     //  return neighbours;
     //}
 
-    public List<Tuple<Directions, Cell>> GetNeighboursNotVisited(int cx, int cy)
+    public List<Tuple<Directions, Cell>> 
+      GetNeighboursNotVisited(
+      int cx, 
+      int cy)
     {
-      List<Tuple<Directions, Cell>> neighbours = new List<Tuple<Directions, Cell>>();
-      foreach (Directions dir in Enum.GetValues(typeof(Directions)))
+      List<Tuple<Directions, Cell>> neighbours = 
+        new List<Tuple<Directions, Cell>>();
+
+      foreach (Directions dir in Enum.GetValues(
+        typeof(Directions)))
       {
         int x = cx;
         int y = cy;
@@ -193,7 +172,10 @@ namespace Procedural
       return neighbours;
     }
 
-    public void RemoveCellWall(int x, int y, Directions dir)
+    public void RemoveCellWall(
+      int x, 
+      int y, 
+      Directions dir)
     {
       if (dir != Directions.NONE)
       {

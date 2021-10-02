@@ -5,9 +5,6 @@ using Procedural;
 
 public class MazeGenerator : MonoBehaviour
 {
-  public int START_X = 0;
-  public int START_Y = 0;
-
   public int rows = 11;
   public int cols = 11;
   public GameObject mCellPrefab;
@@ -16,17 +13,20 @@ public class MazeGenerator : MonoBehaviour
 
   public Maze maze;
 
-  Stack<Maze.Cell> _stack = new Stack<Maze.Cell>();
+  Stack<Cell> _stack = new Stack<Cell>();
 
-  public bool MazeGenerationCompleted { get; private set; } = false;
+  public bool MazeGenerationCompleted
+  {
+    get;
+    private set;
+  } = false;
 
   // Start is called before the first frame update
   void Start()
   {
-    //UnityEngine.Random.InitState(100);
+    int START_X = -cols / 2;
+    int START_Y = -rows / 2;
 
-    START_Y = -rows / 2;
-    START_X = -cols / 2;
     maze = new Maze(rows, cols);
     mCellGameObjs = new MazeCell[cols, rows];
     for (int i = 0; i < cols; ++i)
@@ -35,9 +35,13 @@ public class MazeGenerator : MonoBehaviour
       {
         GameObject obj = Instantiate(mCellPrefab);
         obj.transform.parent = transform;
-        Maze.Cell cell = maze.GetCell(i, j);
+        Cell cell = maze.GetCell(i, j);
         cell.onSetDirFlag = OnCellSetDirFlag;
-        obj.transform.position = new Vector3(START_X + cell.x, START_Y + cell.y, 1.0f);
+        obj.transform.position = new Vector3(
+          START_X + cell.x, 
+          START_Y + cell.y, 
+          1.0f);
+
         mCellGameObjs[i, j] = obj.GetComponent<MazeCell>();
       }
     }
@@ -46,16 +50,22 @@ public class MazeGenerator : MonoBehaviour
 
   public void CreateNewMaze()
   {
-    _stack.Push(maze.GetCell(0, 0));
+    maze.RemoveCellWall(
+      0, 
+      0, 
+      Directions.LEFT);
 
-    maze.RemoveCellWall(0, 0, Maze.Directions.LEFT);
-    maze.RemoveCellWall(cols - 1, rows - 1, Maze.Directions.RIGHT);
+    maze.RemoveCellWall(
+      cols - 1, 
+      rows - 1, 
+      Directions.RIGHT);
+
+    _stack.Push(maze.GetCell(0, 0));
     StartCoroutine(Coroutine_Generate());
   }
 
   public void HighlightCell(int i, int j, bool flag)
   {
-    //mCellGameObjs[i, j].transform.GetChild(8).gameObject.SetActive(flag);
     mCellGameObjs[i, j].SetHighlight(flag);
   }
 
@@ -66,15 +76,17 @@ public class MazeGenerator : MonoBehaviour
     {
       for (int j = 0; j < rows; ++j)
       {
-        //mCellGameObjs[i, j].transform.GetChild(8).gameObject.SetActive(false);
         mCellGameObjs[i, j].SetHighlight(false);
       }
     }
   }
 
-  public void OnCellSetDirFlag(int x, int y, Maze.Directions dir, bool f)
+  public void OnCellSetDirFlag(
+    int x, 
+    int y, 
+    Directions dir, 
+    bool f)
   {
-    //mCellGameObjs[x, y].transform.GetChild((int)dir).gameObject.SetActive(f);
     mCellGameObjs[x, y].SetActive(dir, f);
   }
 
@@ -82,8 +94,7 @@ public class MazeGenerator : MonoBehaviour
   {
     if (_stack.Count == 0) return true;
 
-    Maze.Cell c = _stack.Peek();
-
+    Cell c = _stack.Peek();
     var neighbours = maze.GetNeighboursNotVisited(c.x, c.y);
 
     if (neighbours.Count != 0)
@@ -94,15 +105,18 @@ public class MazeGenerator : MonoBehaviour
         index = Random.Range(0, neighbours.Count);
       }
       var item = neighbours[index];
-      Maze.Cell neighbour = item.Item2;
+      Cell neighbour = item.Item2;
       neighbour.visited = true;
       maze.RemoveCellWall(c.x, c.y, item.Item1);
+
+      mCellGameObjs[c.x, c.y].SetHighlight(true);
 
       _stack.Push(neighbour);
     }
     else
     {
       _stack.Pop();
+      mCellGameObjs[c.x, c.y].SetHighlight(false);
     }
     return false;
   }
@@ -113,12 +127,9 @@ public class MazeGenerator : MonoBehaviour
     while (!flag)
     {
       flag = GenerateStep();
-      yield return null;
+      //yield return null;
+      yield return new WaitForSeconds(0.05f);
     }
     MazeGenerationCompleted = true;
-  }
-
-  void Update()
-  {
   }
 }

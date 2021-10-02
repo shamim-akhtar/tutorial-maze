@@ -19,7 +19,7 @@ public class MazeCell : MonoBehaviour
     Highlight.SetActive(flag);
   }
 
-  public void SetActive(Maze.Directions dir, bool flag)
+  public void SetActive(Directions dir, bool flag)
   {
     Walls[(int)dir].SetActive(flag);
   }
