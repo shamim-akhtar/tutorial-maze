@@ -235,11 +235,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2951b6d770345c147a20e1cdd5bbc815, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  START_X: 0
-  START_Y: 0
   rows: 11
   cols: 17
-  mCellPrefab: {fileID: 655410671452507885, guid: 5cb6be9474f00f04a8b0a3b277583063, type: 3}
+  CellPrefab: {fileID: 655410671452507885, guid: 5cb6be9474f00f04a8b0a3b277583063, type: 3}
 --- !u!4 &578443065
 Transform:
   m_ObjectHideFlags: 0
