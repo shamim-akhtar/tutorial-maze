@@ -890,6 +890,7 @@ GameObject:
   m_Component:
   - component: {fileID: 655410671452507884}
   - component: {fileID: 664616437827348381}
+  - component: {fileID: 2182188389565380871}
   m_Layer: 0
   m_Name: Cell
   m_TagString: Untagged
@@ -937,7 +938,33 @@ MonoBehaviour:
   - {fileID: 655410669867262528}
   - {fileID: 655410670681803393}
   - {fileID: 655410669572353289}
-  Highlight: {fileID: 5458730047775128927}
+  Highlight: {fileID: 4074145500349341236}
+--- !u!61 &2182188389565380871
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655410671452507885}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &5458730047775128927
 GameObject:
   m_ObjectHideFlags: 0

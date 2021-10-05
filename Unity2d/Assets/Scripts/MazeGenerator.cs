@@ -12,7 +12,7 @@ public class MazeGenerator : MonoBehaviour
   public GameObject CellPrefab;
 
   // The 2d array of monobehavious maze cells.
-  MazeCell[,] mMazeCells;
+  public MazeCell[,] mMazeCells;
 
   // The maze
   public Maze maze
@@ -24,11 +24,11 @@ public class MazeGenerator : MonoBehaviour
   // The stack for backpropagation.
   Stack<Cell> _stack = new Stack<Cell>();
 
-  //public bool MazeGenerationCompleted
-  //{
-  //  get;
-  //  private set;
-  //} = false;
+  public bool MazeGenerationCompleted
+  {
+    get;
+    private set;
+  } = false;
 
   // Start is called before the first frame update
   void Start()
@@ -52,6 +52,7 @@ public class MazeGenerator : MonoBehaviour
           1.0f);
 
         mMazeCells[i, j] = obj.GetComponent<MazeCell>();
+        mMazeCells[i, j].Cell = cell;
       }
     }
     CreateNewMaze();
@@ -146,8 +147,8 @@ public class MazeGenerator : MonoBehaviour
     {
       flag = GenerateStep();
       //yield return null;
-      yield return new WaitForSeconds(0.05f);
+      yield return new WaitForSeconds(0.01f);
     }
-    //MazeGenerationCompleted = true;
+    MazeGenerationCompleted = true;
   }
 }

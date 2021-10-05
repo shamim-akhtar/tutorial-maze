@@ -7,7 +7,9 @@ public class MazeCell : MonoBehaviour
   GameObject[] Walls;
 
   [SerializeField]
-  GameObject Highlight;
+  SpriteRenderer Highlight;
+
+  public Cell Cell { get; set; }
 
   void Start()
   {
@@ -16,7 +18,12 @@ public class MazeCell : MonoBehaviour
 
   public void SetHighlight(bool flag)
   {
-    Highlight.SetActive(flag);
+    Highlight.gameObject.SetActive(flag);
+  }
+
+  public void SetHighColor(Color color)
+  {
+    Highlight.color = color;
   }
 
   public void SetActive(Directions dir, bool flag)

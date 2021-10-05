@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using UnityEngine;
 
 namespace Procedural
 {
@@ -13,6 +14,9 @@ namespace Procedural
     // the 2d array of cells
     private Cell[,] mCells;
 
+    public int NumRows { get { return mRows; } }
+    public int NumCols { get { return mCols; } }
+
     // constructor
     public Maze(int rows, int cols)
     {
@@ -25,7 +29,7 @@ namespace Procedural
       {
         for (var j = 0; j < mRows; j++)
         {
-          mCells[i, j] = new Cell(i, j);
+          mCells[i, j] = new Cell(i, j, this);
         }
       }
     }
@@ -39,63 +43,6 @@ namespace Procedural
     {
       return mRows * mCols;
     }
-
-    //public List<Tuple<Maze.Directions, Maze.Cell>> GetNeighbours(int cx, int cy)
-    //{
-    //  List<Tuple<Maze.Directions, Maze.Cell>> neighbours = new List<Tuple<Maze.Directions, Maze.Cell>>();
-    //  foreach (Maze.Directions dir in Enum.GetValues(typeof(Maze.Directions)))
-    //  {
-    //    int x = cx;
-    //    int y = cy;
-
-    //    switch (dir)
-    //    {
-    //      case Maze.Directions.UP:
-    //        if (y < mRows - 1)
-    //        {
-    //          ++y;
-    //          neighbours.Add(new Tuple<Maze.Directions, Maze.Cell>(
-    //              Maze.Directions.UP,
-    //              GetCell(x, y))
-    //          );
-    //        }
-    //        break;
-    //      case Maze.Directions.RIGHT:
-    //        if (x < mCols - 1)
-    //        {
-    //          ++x;
-    //          neighbours.Add(new Tuple<Maze.Directions, Maze.Cell>(
-    //              Maze.Directions.RIGHT,
-    //              GetCell(x, y))
-    //          );
-    //        }
-    //        break;
-    //      case Maze.Directions.DOWN:
-    //        if (y > 0)
-    //        {
-    //          --y;
-    //          neighbours.Add(new Tuple<Maze.Directions, Maze.Cell>(
-    //              Maze.Directions.DOWN,
-    //              GetCell(x, y))
-    //          );
-    //        }
-    //        break;
-    //      case Maze.Directions.LEFT:
-    //        if (x > 0)
-    //        {
-    //          --x;
-    //          neighbours.Add(new Tuple<Maze.Directions, Maze.Cell>(
-    //              Maze.Directions.LEFT,
-    //              GetCell(x, y))
-    //          );
-    //        }
-    //        break;
-    //      default:
-    //        break;
-    //    }
-    //  }
-    //  return neighbours;
-    //}
 
     public List<Tuple<Directions, Cell>> 
       GetNeighboursNotVisited(
