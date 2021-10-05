@@ -52,6 +52,7 @@ public class MazeGenerator : MonoBehaviour
           1.0f);
 
         mMazeCells[i, j] = obj.GetComponent<MazeCell>();
+        mMazeCells[i, j].Cell = cell;
       }
     }
     CreateNewMaze();

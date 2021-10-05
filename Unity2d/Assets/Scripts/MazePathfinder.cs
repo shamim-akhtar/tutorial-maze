@@ -1,13 +1,27 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Procedural;
+using GameAI.PathFinding;
+using System.Collections.Generic;
 
 public class MazePathfinder : MonoBehaviour
 {
   public Transform mDestination;
   public NPC mNpc;
   public MazeGenerator mMazeGenerator;
+
+  public Color COLOR_WALKABLE = new Color(42 / 255.0f, 99 / 255.0f, 164 / 255.0f, 1.0f);
+  public Color COLOR_CURRENT_NODE = new Color(0.5f, 0.4f, 0.1f, 1.0f);
+  public Color COLOR_ADD_TO_OPEN_LIST = new Color(0.2f, 0.7f, 0.5f, 1.0f);
+  public Color COLOR_ADD_TO_CLOSED_LIST = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+
+  Cell mStart;
+  Cell mGoal;
+
+  LineRenderer mPathViz;
+
+  AStarPathFinder<Vector2Int> mPathFinder = new AStarPathFinder<Vector2Int>();
 
   // Start is called before the first frame update
   void Start()
@@ -26,6 +40,53 @@ public class MazePathfinder : MonoBehaviour
     // maze generation completed.
     // Set the NPC to cell 0, 0
     mNpc.transform.position = mMazeGenerator.mMazeCells[0, 0].transform.position;
+    mStart = mMazeGenerator.mMazeCells[0, 0].Cell;
+    mGoal = mStart;
+
+    // create the line renderer to show the path.
+    // We create a line renderer to show the path.
+    LineRenderer lr = mNpc.gameObject.AddComponent<LineRenderer>();
+    lr.startWidth = 0.1f;
+    lr.endWidth = 0.1f;
+    lr.startColor = Color.magenta;
+    lr.endColor = Color.magenta;
+
+    mPathViz = lr;
+
+    // set the pathfinder cost functions.
+
+    mPathFinder.HeuristicCost = GetManhattanCost;
+    mPathFinder.NodeTraversalCost = GetEuclideanCost;
+    // to show pathfinding progress.
+
+    mPathFinder.onChangeCurrentNode = OnChangeCurrentNode;
+    mPathFinder.onAddToClosedList = OnAddToClosedList;
+    mPathFinder.onAddToOpenList = OnAddToOpenList;
+  }
+
+  public void OnChangeCurrentNode(PathFinder<Vector2Int>.PathFinderNode node)
+  {
+    int x = node.Location.Value.x;
+    int y = node.Location.Value.y;
+    MazeCell mazeCell = mMazeGenerator.mMazeCells[x, y];
+    mazeCell.SetHighColor(COLOR_CURRENT_NODE);
+    mazeCell.SetHighlight(true);
+  }
+  public void OnAddToOpenList(PathFinder<Vector2Int>.PathFinderNode node)
+  {
+    int x = node.Location.Value.x;
+    int y = node.Location.Value.y;
+    MazeCell mazeCell = mMazeGenerator.mMazeCells[x, y];
+    mazeCell.SetHighColor(COLOR_ADD_TO_OPEN_LIST);
+    mazeCell.SetHighlight(true);
+  }
+  public void OnAddToClosedList(PathFinder<Vector2Int>.PathFinderNode node)
+  {
+    int x = node.Location.Value.x;
+    int y = node.Location.Value.y;
+    MazeCell mazeCell = mMazeGenerator.mMazeCells[x, y];
+    mazeCell.SetHighColor(COLOR_ADD_TO_CLOSED_LIST);
+    mazeCell.SetHighlight(true);
   }
 
   // Update is called once per frame
@@ -65,92 +126,109 @@ public class MazePathfinder : MonoBehaviour
       mDestination.position = pos;
 
       mDestination.gameObject.SetActive(true);
-      //mGoal = sc.RectGridCell;
-      mNpc.AddWayPoint(new Vector2(obj.transform.position.x, obj.transform.position.y));
 
-      //FindPath();
+      //mNpc.AddWayPoint(new Vector2(obj.transform.position.x, obj.transform.position.y));
+
+      mStart = mGoal;
+      mGoal = mazeCell.Cell;
+      FindPath();
     }
   }
   public void FindPath()
   {
-    //mPathFinders[mPathFinderType][i].Initialize(mNPCStartPositions[i], mGoal);
-    //StartCoroutine(Coroutine_FindPathSteps(i));
+    mPathFinder.Initialize(mStart, mGoal);
+    StartCoroutine(Coroutine_FindPathSteps());
+
+    // reset the line.
+    mPathViz.positionCount = 0;
+    for(int i = 0; i < mMazeGenerator.maze.NumCols; ++i)
+    {
+      for (int j = 0; j < mMazeGenerator.maze.NumRows; ++j)
+      {
+        mMazeGenerator.mMazeCells[i, j].SetHighColor(COLOR_WALKABLE);
+        mMazeGenerator.mMazeCells[i, j].SetHighlight(false);
+      }
+    }
   }
-  //IEnumerator Coroutine_FindPathSteps(int index)
-  //{
-  //  PathFinder<Vector2Int> pathFinder = mPathFinders[mPathFinderType][index];
-  //  while (pathFinder.Status == PathFinderStatus.RUNNING)
-  //  {
-  //    pathFinder.Step();
-  //    yield return null;
-  //  }
+  IEnumerator Coroutine_FindPathSteps()
+  {
+    while (mPathFinder.Status == PathFinderStatus.RUNNING)
+    {
+      mPathFinder.Step();
+      yield return null;
+    }
 
-  //  if (pathFinder.Status == PathFinderStatus.SUCCESS)
-  //  {
-  //    OnPathFound(index);
-  //  }
-  //  else if (pathFinder.Status == PathFinderStatus.FAILURE)
-  //  {
-  //    OnPathNotFound(index);
-  //  }
-  //}
-  //public void OnPathFound(int index)
-  //{
-  //  if (mTextNotification)
-  //  {
-  //    mTextNotification.text = "Found path to destination";
-  //  }
-  //  PathFinder<Vector2Int>.PathFinderNode node = null;
+    if (mPathFinder.Status == PathFinderStatus.SUCCESS)
+    {
+      OnPathFound();
+    }
+    else if (mPathFinder.Status == PathFinderStatus.FAILURE)
+    {
+      OnPathNotFound();
+    }
+  }
+  public void OnPathFound()
+  {
+    PathFinder<Vector2Int>.PathFinderNode node = null;
 
-  //  if (!mInteractive)
-  //  {
-  //    //ThreadedPathFinder<Vector2Int> tpf = mThreadedPool.GetThreadedPathFinder(index);
-  //    //node = tpf.PathFinder.CurrentNode;
-  //    node = mPathFinders[mPathFinderType][index].CurrentNode;
-  //  }
-  //  else
-  //  {
-  //    node = mPathFinders[mPathFinderType][index].CurrentNode;
-  //  }
+    node = mPathFinder.CurrentNode;
 
-  //  SetFCost(node.Fcost);
-  //  SetGCost(node.GCost);
-  //  SetHCost(node.Hcost);
+    List<Vector3> reverse_positions = new List<Vector3>();
 
-  //  List<Vector2Int> reverse_indices = new List<Vector2Int>();
+    while (node != null)
+    {
+      Vector3 pos = mMazeGenerator.mMazeCells[
+        node.Location.Value.x, 
+        node.Location.Value.y].transform.position;
+      reverse_positions.Add(pos);
+      node = node.Parent;
+    }
 
-  //  while (node != null)
-  //  {
-  //    reverse_indices.Add(node.Location.Value);
-  //    node = node.Parent;
-  //  }
-  //  NPC Npc = mNPCs[index].GetComponent<NPC>();
+    LineRenderer lr = mPathViz;
+    lr.positionCount = reverse_positions.Count;
+    for (int i = reverse_positions.Count - 1; i >= 0; i--)
+    {
+      Vector3 p = reverse_positions[i];
+      mNpc.AddWayPoint(new Vector2(
+        p.x,
+        p.y));
 
-  //  LineRenderer lr = mPathViz[index];
-  //  lr.positionCount = reverse_indices.Count;
-  //  for (int i = reverse_indices.Count - 1; i >= 0; i--)
-  //  {
-  //    Npc.AddWayPoint(new Vector2(
-  //      reverse_indices[i].x,
-  //      reverse_indices[i].y));
+      lr.SetPosition(i, new Vector3(
+        p.x,
+        p.y,
+        -2.0f));
+    }
 
-  //    lr.SetPosition(i, new Vector3(
-  //      reverse_indices[i].x,
-  //      reverse_indices[i].y,
-  //      -2.0f));
-  //  }
-  //  // save these as the previous start positions.
-  //  mNPCStartPositionsPrev[index] = mNPCStartPositions[index];
-  //  mNPCStartPositions[index] = mGoal;
-  //}
+    // now change the start cell
+    // for the pathfinder to current
+    // goal.
+    mStart = mGoal;
+  }
 
-  //void OnPathNotFound(int i)
-  //{
-  //  Debug.Log(i + " - Cannot find path to destination");
-  //  if (mTextNotification)
-  //  {
-  //    mTextNotification.text = "Cannot find path to destination";
-  //  }
-  //}
+  void OnPathNotFound()
+  {
+    Debug.Log("Cannot find path to destination");
+  }
 
+  public float GetManhattanCost(
+    Vector2Int a,
+    Vector2Int b)
+  {
+    return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+  }
+
+  public float GetEuclideanCost(
+    Vector2Int a,
+    Vector2Int b)
+  {
+    return GetCostBetweenTwoCells(a, b);
+  }
+
+  public float GetCostBetweenTwoCells(
+    Vector2Int a,
+    Vector2Int b)
+  {
+    return (mMazeGenerator.mMazeCells[a.x, a.y].transform.position -
+      mMazeGenerator.mMazeCells[b.x, b.y].transform.position).magnitude;
+  }
 }

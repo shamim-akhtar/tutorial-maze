@@ -79,36 +79,40 @@ namespace Procedural
         switch (dir)
         {
           case Directions.UP:
+            if (y < mMaze.NumRows - 1)
             {
               ++y;
-              if (flag[(int)dir])
+              if (!flag[(int)dir])
               {
                 neighbours.Add(mMaze.GetCell(x, y));
               }
             }
             break;
           case Directions.RIGHT:
+            if (x < mMaze.NumCols - 1)
             {
               ++x;
-              if (flag[(int)dir])
+              if (!flag[(int)dir])
               {
                 neighbours.Add(mMaze.GetCell(x, y));
               }
             }
             break;
           case Directions.DOWN:
+            if (y > 0)
             {
               --y;
-              if (flag[(int)dir])
+              if (!flag[(int)dir])
               {
                 neighbours.Add(mMaze.GetCell(x, y));
               }
             }
             break;
           case Directions.LEFT:
+            if (x > 0)
             {
               --x;
-              if (flag[(int)dir])
+              if (!flag[(int)dir])
               {
                 neighbours.Add(mMaze.GetCell(x, y));
               }

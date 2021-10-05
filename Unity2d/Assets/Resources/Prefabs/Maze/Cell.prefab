@@ -938,7 +938,7 @@ MonoBehaviour:
   - {fileID: 655410669867262528}
   - {fileID: 655410670681803393}
   - {fileID: 655410669572353289}
-  Highlight: {fileID: 5458730047775128927}
+  Highlight: {fileID: 4074145500349341236}
 --- !u!61 &2182188389565380871
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2239587760730460986, guid: 59fccd7d6b5de4b4cb0da26ae0a2f8c6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 8572495700374421097, guid: 59fccd7d6b5de4b4cb0da26ae0a2f8c6, type: 3}
       propertyPath: m_Name
       value: NPC_Prefab
@@ -148,7 +152,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8572495700374421099, guid: 59fccd7d6b5de4b4cb0da26ae0a2f8c6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8572495700374421099, guid: 59fccd7d6b5de4b4cb0da26ae0a2f8c6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -177,6 +181,10 @@ PrefabInstance:
     - target: {fileID: 8572495700374421099, guid: 59fccd7d6b5de4b4cb0da26ae0a2f8c6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8572495701905182648, guid: 59fccd7d6b5de4b4cb0da26ae0a2f8c6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59fccd7d6b5de4b4cb0da26ae0a2f8c6, type: 3}
@@ -461,6 +469,10 @@ MonoBehaviour:
   mDestination: {fileID: 2124261162}
   mNpc: {fileID: 120504820}
   mMazeGenerator: {fileID: 578443064}
+  COLOR_WALKABLE: {r: 0.16470589, g: 0.3882353, b: 0.6431373, a: 1}
+  COLOR_CURRENT_NODE: {r: 0.5, g: 0.4, b: 0.1, a: 1}
+  COLOR_ADD_TO_OPEN_LIST: {r: 0.2, g: 0.7, b: 0.5, a: 1}
+  COLOR_ADD_TO_CLOSED_LIST: {r: 0.22312212, g: 0.3613503, b: 0.4339623, a: 1}
 --- !u!4 &1822060462
 Transform:
   m_ObjectHideFlags: 0

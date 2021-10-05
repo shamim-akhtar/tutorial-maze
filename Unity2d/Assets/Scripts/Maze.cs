@@ -14,6 +14,9 @@ namespace Procedural
     // the 2d array of cells
     private Cell[,] mCells;
 
+    public int NumRows { get { return mRows; } }
+    public int NumCols { get { return mCols; } }
+
     // constructor
     public Maze(int rows, int cols)
     {
