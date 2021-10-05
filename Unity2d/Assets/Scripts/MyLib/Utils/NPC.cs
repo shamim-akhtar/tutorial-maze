@@ -10,6 +10,10 @@ public class NPC : MonoBehaviour
 
   void Start()
   {
+  }
+
+  public void Init()
+  {
     StartCoroutine(Coroutine_MoveTo());
   }
 

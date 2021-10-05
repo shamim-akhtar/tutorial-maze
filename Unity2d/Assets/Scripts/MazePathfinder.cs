@@ -27,6 +27,7 @@ public class MazePathfinder : MonoBehaviour
   void Start()
   {
     mDestination.gameObject.SetActive(false);
+    mNpc.gameObject.SetActive(false);
 
     // wait for maze generation to complete.
     StartCoroutine(Coroutine_WaitForMazeGeneration());
@@ -62,6 +63,9 @@ public class MazePathfinder : MonoBehaviour
     mPathFinder.onChangeCurrentNode = OnChangeCurrentNode;
     mPathFinder.onAddToClosedList = OnAddToClosedList;
     mPathFinder.onAddToOpenList = OnAddToOpenList;
+
+    mNpc.gameObject.SetActive(true);
+    mNpc.Init();
   }
 
   public void OnChangeCurrentNode(PathFinder<Vector2Int>.PathFinderNode node)
