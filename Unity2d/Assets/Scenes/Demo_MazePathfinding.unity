@@ -469,7 +469,7 @@ MonoBehaviour:
   mDestination: {fileID: 2124261162}
   mNpc: {fileID: 120504820}
   mMazeGenerator: {fileID: 578443064}
-  COLOR_WALKABLE: {r: 0.16470589, g: 0.3882353, b: 0.6431373, a: 1}
+  COLOR_WALKABLE: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 1}
   COLOR_CURRENT_NODE: {r: 0.5, g: 0.4, b: 0.1, a: 1}
   COLOR_ADD_TO_OPEN_LIST: {r: 0.2, g: 0.7, b: 0.5, a: 1}
   COLOR_ADD_TO_CLOSED_LIST: {r: 0.22312212, g: 0.3613503, b: 0.4339623, a: 1}

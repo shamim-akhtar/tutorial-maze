@@ -1,9 +1,9 @@
 using System.Collections;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using Procedural;
-using GameAI.PathFinding;
 using System.Collections.Generic;
+using UnityEngine;
+using Procedural;
+using UnityEngine.EventSystems;
+using GameAI.PathFinding;
 
 public class MazePathfinder : MonoBehaviour
 {
@@ -11,19 +11,23 @@ public class MazePathfinder : MonoBehaviour
   public NPC mNpc;
   public MazeGenerator mMazeGenerator;
 
-  public Color COLOR_WALKABLE = new Color(42 / 255.0f, 99 / 255.0f, 164 / 255.0f, 1.0f);
+  // The start and the goal cells.
+  private Cell mStart;
+  private Cell mGoal;
+
+  // Pathfinding related variables.
+  LineRenderer mPathViz;
+  AStarPathFinder<Vector2Int> mPathFinder = 
+    new AStarPathFinder<Vector2Int>();
+
+  // Visualising patfinding progress.
+  public Color COLOR_WALKABLE = new Color(49 / 255.0f, 77 / 255.0f, 121 / 255.0f, 1.0f);
   public Color COLOR_CURRENT_NODE = new Color(0.5f, 0.4f, 0.1f, 1.0f);
   public Color COLOR_ADD_TO_OPEN_LIST = new Color(0.2f, 0.7f, 0.5f, 1.0f);
   public Color COLOR_ADD_TO_CLOSED_LIST = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+  public Color COLOR_ACTUAL_PATH = new Color(0.5f, 0.5f, 0.8f, 1.0f);
 
-  Cell mStart;
-  Cell mGoal;
 
-  LineRenderer mPathViz;
-
-  AStarPathFinder<Vector2Int> mPathFinder = new AStarPathFinder<Vector2Int>();
-
-  // Start is called before the first frame update
   void Start()
   {
     mDestination.gameObject.SetActive(false);
@@ -38,11 +42,17 @@ public class MazePathfinder : MonoBehaviour
     while (!mMazeGenerator.MazeGenerationCompleted)
       yield return null;
 
-    // maze generation completed.
-    // Set the NPC to cell 0, 0
-    mNpc.transform.position = mMazeGenerator.mMazeCells[0, 0].transform.position;
+    // set the start cell to cell 0, 0.
     mStart = mMazeGenerator.mMazeCells[0, 0].Cell;
     mGoal = mStart;
+
+    // maze generation completed.
+    // Set the NPC to cell 0, 0
+    mNpc.transform.position = 
+      mMazeGenerator.mMazeCells[0, 0].transform.position;
+
+    mNpc.gameObject.SetActive(true);
+    mNpc.Init();
 
     // create the line renderer to show the path.
     // We create a line renderer to show the path.
@@ -55,19 +65,15 @@ public class MazePathfinder : MonoBehaviour
     mPathViz = lr;
 
     // set the pathfinder cost functions.
-
     mPathFinder.HeuristicCost = GetManhattanCost;
     mPathFinder.NodeTraversalCost = GetEuclideanCost;
-    // to show pathfinding progress.
 
+    // to show pathfinding progress.
     mPathFinder.onChangeCurrentNode = OnChangeCurrentNode;
     mPathFinder.onAddToClosedList = OnAddToClosedList;
     mPathFinder.onAddToOpenList = OnAddToOpenList;
 
-    mNpc.gameObject.SetActive(true);
-    mNpc.Init();
   }
-
   public void OnChangeCurrentNode(PathFinder<Vector2Int>.PathFinderNode node)
   {
     int x = node.Location.Value.x;
@@ -93,7 +99,28 @@ public class MazePathfinder : MonoBehaviour
     mazeCell.SetHighlight(true);
   }
 
-  // Update is called once per frame
+  public float GetManhattanCost(
+  Vector2Int a,
+  Vector2Int b)
+  {
+    return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+  }
+
+  public float GetEuclideanCost(
+    Vector2Int a,
+    Vector2Int b)
+  {
+    return GetCostBetweenTwoCells(a, b);
+  }
+
+  public float GetCostBetweenTwoCells(
+    Vector2Int a,
+    Vector2Int b)
+  {
+    return (mMazeGenerator.mMazeCells[a.x, a.y].transform.position -
+      mMazeGenerator.mMazeCells[b.x, b.y].transform.position).magnitude;
+  }
+
   void Update()
   {
     if (!mMazeGenerator.MazeGenerationCompleted)
@@ -108,7 +135,8 @@ public class MazePathfinder : MonoBehaviour
   void RayCastAndSetDestination()
   {
     // disable picking if we hit the UI.
-    if (EventSystem.current.IsPointerOverGameObject() || enabled == false)
+    if (EventSystem.current.IsPointerOverGameObject() || 
+      enabled == false)
     {
       return;
     }
@@ -116,7 +144,11 @@ public class MazePathfinder : MonoBehaviour
     Vector2 rayPos = new Vector2(
         Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
         Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-    RaycastHit2D hit = Physics2D.Raycast(rayPos, Vector2.zero, 0f);
+
+    RaycastHit2D hit = Physics2D.Raycast(
+      rayPos, 
+      Vector2.zero, 
+      0f);
 
     if (hit)
     {
@@ -129,13 +161,18 @@ public class MazePathfinder : MonoBehaviour
       pos.y = mazeCell.transform.position.y;
       mDestination.position = pos;
 
-      mDestination.gameObject.SetActive(true);
-
-      //mNpc.AddWayPoint(new Vector2(obj.transform.position.x, obj.transform.position.y));
-
       mStart = mGoal;
       mGoal = mazeCell.Cell;
+
+      //mNpc.AddWayPoint(
+      //  new Vector2(
+      //    obj.transform.position.x, 
+      //    obj.transform.position.y));
+
       FindPath();
+
+      // finally show the destination game object.
+      mDestination.gameObject.SetActive(true);
     }
   }
   public void FindPath()
@@ -145,7 +182,7 @@ public class MazePathfinder : MonoBehaviour
 
     // reset the line.
     mPathViz.positionCount = 0;
-    for(int i = 0; i < mMazeGenerator.maze.NumCols; ++i)
+    for (int i = 0; i < mMazeGenerator.maze.NumCols; ++i)
     {
       for (int j = 0; j < mMazeGenerator.maze.NumRows; ++j)
       {
@@ -154,12 +191,14 @@ public class MazePathfinder : MonoBehaviour
       }
     }
   }
+
   IEnumerator Coroutine_FindPathSteps()
   {
     while (mPathFinder.Status == PathFinderStatus.RUNNING)
     {
       mPathFinder.Step();
-      yield return null;
+      //yield return null;
+      yield return new WaitForSeconds(0.1f);
     }
 
     if (mPathFinder.Status == PathFinderStatus.SUCCESS)
@@ -182,9 +221,12 @@ public class MazePathfinder : MonoBehaviour
     while (node != null)
     {
       Vector3 pos = mMazeGenerator.mMazeCells[
-        node.Location.Value.x, 
+        node.Location.Value.x,
         node.Location.Value.y].transform.position;
       reverse_positions.Add(pos);
+      mMazeGenerator.mMazeCells[
+        node.Location.Value.x,
+        node.Location.Value.y].SetHighColor(COLOR_ACTUAL_PATH);
       node = node.Parent;
     }
 
@@ -214,25 +256,4 @@ public class MazePathfinder : MonoBehaviour
     Debug.Log("Cannot find path to destination");
   }
 
-  public float GetManhattanCost(
-    Vector2Int a,
-    Vector2Int b)
-  {
-    return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
-  }
-
-  public float GetEuclideanCost(
-    Vector2Int a,
-    Vector2Int b)
-  {
-    return GetCostBetweenTwoCells(a, b);
-  }
-
-  public float GetCostBetweenTwoCells(
-    Vector2Int a,
-    Vector2Int b)
-  {
-    return (mMazeGenerator.mMazeCells[a.x, a.y].transform.position -
-      mMazeGenerator.mMazeCells[b.x, b.y].transform.position).magnitude;
-  }
 }
