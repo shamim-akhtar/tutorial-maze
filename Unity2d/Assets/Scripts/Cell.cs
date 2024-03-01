@@ -5,16 +5,6 @@ using UnityEngine;
 
 namespace Procedural
 {
-  // The directions types for maze
-  // propagation.
-  public enum Directions
-  {
-    UP,
-    RIGHT,
-    DOWN,
-    LEFT,
-    NONE,
-  }
 
   // A cell in the maze.
   public class Cell : Node<Vector2Int>
