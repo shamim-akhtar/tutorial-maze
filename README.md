@@ -1,7 +1,7 @@
 # Implement Mazes in Unity2D
 ![](https://img.shields.io/badge/Unity-2022.3.2f1-green) ![C#](https://img.shields.io/badge/%20-C%23-blue)
 
-![Maze Generation]()
+![Maze Generation](https://github.com/shamim-akhtar/tutorial-maze/blob/main/maze.jpg)
 
 This repository comprises the source codes for my tutorial on how to implement mazes in Unity2D by applying the backtracking algorithm with an explicit stack. Read the complete tutorial [Implement Mazes in Unity2D](https://faramira.com/implement-mazes-in-unity2d/)
 
