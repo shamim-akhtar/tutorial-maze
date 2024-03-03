@@ -1,4 +1,4 @@
-# Implement Mazes in Unity2D
+# Creating Dynamic Mazes in Unity2D
 ![](https://img.shields.io/badge/Unity-2022.3.2f1-green) ![C#](https://img.shields.io/badge/%20-C%23-blue)
 
 ![Maze Generation](https://github.com/shamim-akhtar/tutorial-maze/blob/main/maze.jpg)
