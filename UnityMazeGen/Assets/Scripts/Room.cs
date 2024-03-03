@@ -10,6 +10,7 @@ public class Room : MonoBehaviour
     RIGHT,
     BOTTOM,
     LEFT,
+    NONE,
   }
 
   [SerializeField]
