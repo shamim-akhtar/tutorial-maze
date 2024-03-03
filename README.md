@@ -10,3 +10,11 @@ Not too far ago, mazes were somewhat central to video games. Arguably, the origi
 
 Mazes have long been a staple in video games, offering players a challenging and immersive experience as they navigate through winding pathways and hidden corridors. And now, with Unity, you can bring these intricate mazes to life in your own projects. 
 In this tutorial, we will take you through the step-by-step process of generating mazes in Unity2D, from setting up your project to implementing the backtracking algorithm for maze generation. By the end of this video, you'll have the skills and knowledge to create captivating mazes that will keep your players engaged and entertained.
+
+## View the tutorial on YouTube.
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=q0TRolrmfpE
+" target="_blank"><img src="http://img.youtube.com/vi/q0TRolrmfpE/0.jpg" 
+alt="Video" width="1400" height="700" border="10" /></a>
+
+You can find the previous version of the tutorial in https://github.com/shamim-akhtar/tutorial-maze/tree/2023.
