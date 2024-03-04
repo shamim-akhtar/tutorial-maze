@@ -15,6 +15,6 @@ In this tutorial, we will take you through the step-by-step process of generatin
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=q0TRolrmfpE
 " target="_blank"><img src="http://img.youtube.com/vi/q0TRolrmfpE/0.jpg" 
-alt="Video" width="1400" height="700" border="10" /></a>
+alt="Video" border="10" /></a>
 
 You can find the previous version of the tutorial in https://github.com/shamim-akhtar/tutorial-maze/tree/2023.
