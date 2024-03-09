@@ -56,7 +56,9 @@ public class GenerateMaze : MonoBehaviour
       numY * (roomHeight - 1) / 2,
       -100.0f);
 
-    float min_value = Mathf.Min(numX * (roomWidth - 1), numY * (roomHeight - 1));
+    float min_value = Mathf.Min(
+      numX * (roomWidth - 1), 
+      numY * (roomHeight - 1));
     Camera.main.orthographicSize = min_value * 0.75f;
   }
 
