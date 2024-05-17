@@ -360,14 +360,16 @@ public class GenerateMaze : MonoBehaviour
     {
         int x = node.Location.Value.x;
         int y = node.Location.Value.y;
-        rooms[x, y].SetColor(Color.cyan);
+        //rooms[x, y].SetColor(Color.cyan);
+        rooms[x, y].ResetColor();
     }
 
     public void OnAddToClosedList(PathFinding.PathFinder<Vector2Int>.PathFinderNode node)
     {
         int x = node.Location.Value.x;
         int y = node.Location.Value.y;
-        rooms[x, y].SetColor(Color.gray);
+        //rooms[x, y].SetColor(Color.gray);
+        rooms[x, y].ResetColor();
     }
 
     void ResetColor()

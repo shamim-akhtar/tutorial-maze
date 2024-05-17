@@ -27,6 +27,8 @@ public class Room : MonoBehaviour
     [SerializeField]
     SpriteRenderer marker;
     private Color NORMAL_COLOR = new Color(100.0f / 255.0f, 100.0f / 255.0f, 150.0f / 255.0f);
+    //private Color NORMAL_COLOR = Color.gray;
+    //private Color NORMAL_COLOR = new Color(200 / 255.0f, 200 / 255.0f, 200.0f / 255.0f);
 
     Dictionary<Directions, GameObject> walls =
       new Dictionary<Directions, GameObject>();
@@ -53,6 +55,8 @@ public class Room : MonoBehaviour
         SetDirFlag(Directions.RIGHT, true);
         SetDirFlag(Directions.BOTTOM, true);
         SetDirFlag(Directions.TOP, true);
+
+        ResetColor();
     }
 
     private void SetActive(Directions dir, bool flag)
