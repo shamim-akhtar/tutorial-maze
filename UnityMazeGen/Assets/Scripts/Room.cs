@@ -4,54 +4,96 @@ using UnityEngine;
 
 public class Room : MonoBehaviour
 {
-  public enum Directions
-  {
-    TOP,
-    RIGHT,
-    BOTTOM,
-    LEFT,
-    NONE,
-  }
+    public enum Directions
+    {
+        TOP,
+        RIGHT,
+        BOTTOM,
+        LEFT,
+        NONE,
+    }
 
-  [SerializeField]
-  GameObject topWall;
-  [SerializeField]
-  GameObject rightWall;
-  [SerializeField]
-  GameObject bottomWall;
-  [SerializeField]
-  GameObject leftWall;
+    [SerializeField]
+    GameObject topWall;
+    [SerializeField]
+    GameObject rightWall;
+    [SerializeField]
+    GameObject bottomWall;
+    [SerializeField]
+    GameObject leftWall;
 
-  Dictionary<Directions, GameObject> walls =
-    new Dictionary<Directions, GameObject>();
+    [SerializeField]
+    SpriteRenderer floor;
+    [SerializeField]
+    SpriteRenderer marker;
+    private Color NORMAL_COLOR = new Color(100.0f / 255.0f, 100.0f / 255.0f, 150.0f / 255.0f);
 
-  public Vector2Int Index
-  {
-    get;
-    set;
-  }
+    Dictionary<Directions, GameObject> walls =
+      new Dictionary<Directions, GameObject>();
 
-  public bool visited { get; set; } = false;
+    public Vector2Int Index
+    {
+        get;
+        set;
+    }
 
-  Dictionary<Directions, bool> dirflags =
-    new Dictionary<Directions, bool>();
+    public bool visited { get; set; } = false;
 
-  private void Start()
-  {
-    walls[Directions.TOP] = topWall;
-    walls[Directions.RIGHT] = rightWall;
-    walls[Directions.BOTTOM] = bottomWall;
-    walls[Directions.LEFT] = leftWall;
-  }
+    Dictionary<Directions, bool> dirflags =
+      new Dictionary<Directions, bool>();
 
-  private void SetActive(Directions dir, bool flag)
-  {
-    walls[dir].SetActive(flag);
-  }
+    private void Start()
+    {
+        walls[Directions.TOP] = topWall;
+        walls[Directions.RIGHT] = rightWall;
+        walls[Directions.BOTTOM] = bottomWall;
+        walls[Directions.LEFT] = leftWall;
 
-  public void SetDirFlag(Directions dir, bool flag)
-  {
-    dirflags[dir] = flag;
-    SetActive(dir, flag);
-  }
+        SetDirFlag(Directions.LEFT, true);
+        SetDirFlag(Directions.RIGHT, true);
+        SetDirFlag(Directions.BOTTOM, true);
+        SetDirFlag(Directions.TOP, true);
+    }
+
+    private void SetActive(Directions dir, bool flag)
+    {
+        walls[dir].SetActive(flag);
+    }
+
+    public void SetDirFlag(Directions dir, bool flag)
+    {
+        dirflags[dir] = flag;
+        SetActive(dir, flag);
+    }
+
+    public bool GetDirFlag(Directions dir)
+    {
+        return dirflags[dir];
+    }
+
+    public void SetColor(Color color)
+    {
+        floor.color = color;
+    }
+
+    public void SetMarkerAsStart()
+    {
+        marker.gameObject.SetActive(true);
+        marker.color = Color.green;
+    }
+
+    public void SetMarkerAsDestination()
+    {
+        marker.gameObject.SetActive(true);
+        marker.color = Color.red;
+    }
+
+    public void ResetMarker()
+    {
+        marker.gameObject.SetActive(false);
+    }
+    public void ResetColor()
+    {
+        floor.color = NORMAL_COLOR;
+    }
 }
